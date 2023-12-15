@@ -1,0 +1,93 @@
+---
+title: "Semester Project"
+author: Allan John
+format: 
+        html:
+                self-contained: true
+                code-fold: true
+                code-summary: "Show the code"
+editor: source
+---
+
+## Introduction
+
+Food wastage is a major concern especially when countries, organisations are dealing with poverty and hunger therefore it is important to understand among the two entities that deal with food i.e. Retail, household which of these both waste more food, and also which country has the highest food wastage
+Food wastage is an interesting conundrums especially when he hear that 20% of the world population is suffering from extreme hunger, and on the contrary also hear that global food wastage is high, so this research is to understand on which entity (retail or Household) wastes more food on a per kilogram per year basis
+The data was created by Joakim Arvidsson who uploaded it on kaggle, his source for data was from the site information is beautiful which talks further explains the data and also provides with an info graphic for an easier understanding 
+For this research however the variables that will be studied are Household per kilogram wastage in a capita year and Retail per kilogram wastage per capita year across 214 countries 
+
+```{r}
+Food_wastage_data <- read.csv("C:/Users/aj947/OneDrive - University Of Houston/RStudio/Food Waste data and research - by country.csv")
+head("Food_wastage_data")
+
+retailkg.estimates <- summary(Food_wastage_data$Retail.estimate..kg.capita.year.)
+
+retailVAR <- var(Food_wastage_data$Retail.estimate..kg.capita.year.)
+retailSD <- sd(Food_wastage_data$Retail.estimate..kg.capita.year.)
+
+Householdkg.estimates <- summary(Food_wastage_data$Household.estimate..kg.capita.year.)
+
+HouseholdVar <- var(Food_wastage_data$Household.estimate..kg.capita.year.)
+HouseholdSD <- sd(Food_wastage_data$Household.estimate..kg.capita.year.)
+
+print(retailkg.estimates)
+print(retailVAR)
+print(retailSD)
+print(Householdkg.estimates)
+print(HouseholdVar)
+print(HouseholdSD)
+```
+Presenting the histogram of retail and household wastages
+
+```{r}
+
+hist(Food_wastage_data $Retail.estimate..kg.capita.year.)
+
+hist(Food_wastage_data $Household.estimate..kg.capita.year.)
+
+
+
+```
+
+  
+ The Relationship between the variables
+
+Household wastage far exceeds retail wastage, one reason can be that since houselholds further process goods especially like produce into consumable and non-consumables which might show a higher statistic, also household unit also utilize the food as compared to the retail unit which just distributes the food
+  
+## Regression Results
+
+```{r message=FALSE, warning=FALSE}
+df <- data.frame(contries=c(Food_wastage_data$Country),
+                 retail_wastage=c(Food_wastage_data$Retail.estimate..kg.capita.year.),
+                 Household_wastage=c(Food_wastage_data$Household.estimate..kg.capita.year.))
+head(df,214*3)
+
+model <- lm( Food_wastage_data $Household.estimate..kg.capita.year. ~ Food_wastage_data $Retail.estimate..kg.capita.year., data = Food_wastage_data)
+summary(model)
+print(model)
+# stargazer table of model
+library(stargazer)
+stargazer(model, type = "text")
+
+# plot of model results with confidence intervals
+library(ggplot2)
+require(ggplot2)
+require(reshape2)
+ggplot(data = Food_wastage_data, aes(x = Food_wastage_data$Household.estimate..kg.capita.year., y = Food_wastage_data$Retail.estimate..kg.capita.year.)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = TRUE) +
+  labs(title = "Confidence Interval for Regression Line",
+       subtitle = "95% Confidence Interval for the Slope",
+       caption = "Source: keggle food wastage data") + 
+       xlab("Household food wastage per kg capita per year") + 
+        ylab("Retail food wastage per kg per capita per year") 
+
+```
+
+  
+  
+The intercept which is 77.06 tells us the average kilos of wastage done per year. As mentioned earlier the household estimates far exceed the retail estimates, the maximum retail wastage is 79 which compared to 189 of the household estimate. Since households are subject to population changes it greatly influences the household statistic,whereas retail is not, the wastage can be related lack of redistribution, lack of recycling(for at least the food that can be recycled),or simply buying surplus.
+
+## Conclusion  
+  
+ Food wastage is a critical problem and it was interesting to see that households wasted more food on a yearly basis compared to retail which more often accused of doing so, and Nigeria topping the charts as the country with the highest and at the same time being in 103th position in the global hunger index pointing to severity of hunger in the country, Some of the solutions can be a proper redistribution and rationing of food so that everyone on a subsistence level can acquire food. While also recycling and composting can also be looked into for a means to improve agricultural growth. 
